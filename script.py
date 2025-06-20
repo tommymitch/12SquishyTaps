@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import ximu3csv
 from aeon.utils.discovery import all_estimators
+from sklearn.metrics import confusion_matrix, classification_report
+import seaborn
 
 all_estimators("classifier", tag_filter={"algorithm_type": "convolution"})
 
@@ -188,6 +190,15 @@ rocket = RocketClassifier()
 rocket.fit(motion_train, motion_train_labels)
 
 y_pred = rocket.predict(motion_test)
+print(classification_report(motion_test_labels,y_pred))
+
+matrix = confusion_matrix(motion_test_labels,y_pred,labels=np.unique(motion_test_labels))
+plt.figure(figsize=(10,10))
+seaborn.heatmap(matrix,annot=True, fmt='d', xticklabels=np.unique(motion_test_labels),yticklabels=np.unique(motion_test_labels),cmap="Greens")
+plt.xlabel("predicted")
+plt.ylabel("true")
+plt.show()
+
 accuracy = accuracy_score(motion_test_labels, y_pred)
 
 print(y_pred)
